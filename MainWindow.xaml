@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:WPF_XML_FL"
         mc:Ignorable="d"
         Title="Fighters List" Height="450" Width="800">
+    <Window.Resources>
+        <CollectionViewSource x:Key="FightersList" Source="{Binding Fighters}" />
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -18,9 +21,7 @@
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_Save" Command="{Binding SaveCommand}" />
                 <MenuItem Header="_Load" Command="{Binding LoadCommand}" />
-                <MenuItem Header="Exit" Command="{Binding ExitCommand}" />
             </Menu>
-            <StackPanel></StackPanel>
         </DockPanel>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
@@ -34,7 +35,7 @@
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="20" />
             </Grid.ColumnDefinitions>
             <StackPanel Name="InputFields" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
@@ -56,14 +57,89 @@
                 <TextBlock Name="ClubInputLabel" Text="Club" />
                 <TextBox Name="ClubInput" HorizontalAlignment="Stretch" Text="{Binding EditableData.Club}" />
             </StackPanel>
-            <ListBox Name="FightersList" 
-                     Grid.Row="1" Grid.RowSpan="3" Grid.Column="3" 
+            <Grid Grid.Row="1" Grid.RowSpan="3" Grid.Column="3" 
                      HorizontalAlignment="Stretch" 
-                     VerticalAlignment="Stretch" 
-                     Background="LightGray" 
-                     ItemsSource="{Binding Fighters}">
+                     VerticalAlignment="Stretch" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="1.2*" />
+                    <ColumnDefinition Width="1.2*" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Name="NameHdr" Grid.Column="0" FontWeight="Bold" Text="Name"/>
+
+                <TextBlock Name="EmailHdr" Grid.Column="1" FontWeight="Bold" Text="Email"/>
+
+                <TextBlock Name="CityHdr" Grid.Column="2" FontWeight="Bold" Text="City"/>
+                <ComboBox Name="CityComboBox" Grid.Row="1" Grid.Column="2" 
+                          ItemsSource="{Binding Cities}" SelectedValue="{Binding SelectedCity}" SelectionChanged="CityComboBox_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
                 
-            </ListBox>
+                <TextBlock Name="ClubHdr" Grid.Column="3" FontWeight="Bold" Text="Club"/>
+                <ComboBox Name="ClubComboBox" Grid.Row="1" Grid.Column="3" 
+                          ItemsSource="{Binding Clubs}" SelectedValue="{Binding SelectedClub}" SelectionChanged="ClubComboBox_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <TextBlock Name="PhoneHdr" Grid.Column="4" FontWeight="Bold" Text="Phone"/>
+
+                <TextBlock Name="BdayHdr" Grid.Column="5" FontWeight="Bold" Text="Birthdate"/>
+
+                <ListBox Name="FightersListBox"
+                     Grid.Row="2"
+                     Grid.ColumnSpan="6"
+                     HorizontalAlignment="Stretch" 
+                     HorizontalContentAlignment="Stretch"
+                     VerticalAlignment="Stretch" 
+                     Background="LightGray"
+                     ItemsSource="{Binding FilteredFighters}" SelectionChanged="FightersListBox_SelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="4*" />
+                                    <ColumnDefinition Width="1.2*" />
+                                    <ColumnDefinition Width="1.2*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="3*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Name}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Email}"/>
+                                <TextBlock Grid.Column="2" Text="{Binding City}"/>
+                                <TextBlock Grid.Column="3" Text="{Binding Club}"/>
+                                <TextBlock Grid.Column="4" Text="{Binding Phone}"/>
+                                <TextBlock Grid.Column="5" Text="{Binding Birthdate, StringFormat=d}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            <UniformGrid Columns="2" Grid.Column="1" Grid.Row="3" >
+                <Button Name="AddBtn" Margin="5" Command="{Binding AddCommand}" >
+                    <TextBlock Name="AddBtnLabel" Text="Add" />
+                </Button>
+                <Button Name="DelBtn" Margin="5" Command="{Binding DeleteCommand}" >
+                    <TextBlock Name="DelBtnLabel" Text="Remove" />
+                </Button>
+            </UniformGrid>
         </Grid>
     </Grid>
 </Window>
